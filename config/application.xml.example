@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <data>
+        <dataSource>
+            <facility>Kaeberlein Lab</facility>
+            <folder>test-data/rls data kaeblab</folder>
+        </dataSource>
+        <dataSource>
+            <facility>Buck Lab</facility>
+            <folder>test-data/rls data buck</folder>
+        </dataSource>
+    </data>
+        
+    <reports>
+        <folder>test-data/rls reports</folder>
+        <templatesFolder>test-data/rls report templates</templatesFolder>
+    </reports>
+
+    <database>
+        <host>localhost</host>
+        <name>core-test</name>
+        <username>root</username>
+        <password>happy</password>
+    </database>
+    
+    <coreService>
+        <host>host</host>
+        <apiKey>key</apiKey>
+    </coreService>
+</config>
