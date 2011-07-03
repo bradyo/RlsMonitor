@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE rss PUBLIC "-//Netscape Communications//DTD RSS 0.91//EN" "http://my.netscape.com/publish/formats/rss-0.91.dtd">
+<rss version="0.91"><channel><title>POI Changes</title><link>http://poi.apache.org//changes.html</link><description>POI Changes</description><language>en-us</language><item><title> fix</title><link>http://poi.apache.org//changes.html</link><description> fix
+              by 
+              poi-developers
+              :
+              51098 - Correctly calculate image width/height, if image fits into one cell</description></item><item><title> fix</title><link>http://poi.apache.org//changes.html</link><description> fix
+              by 
+              poi-developers
+              :
+              47147 - Correct extra paragraphs from XWPF Table Cells</description></item><item><title> add</title><link>http://poi.apache.org//changes.html</link><description> add
+              by 
+              poi-developers
+              :
+              51188 - Support for getting and setting XPWF zoom settings</description></item><item><title> add</title><link>http://poi.apache.org//changes.html</link><description> add
+              by 
+              poi-developers
+              :
+              51134 - Support for adding Numbering and Styles to a XWPF document that doesn't already have them</description></item><item><title> fix</title><link>http://poi.apache.org//changes.html</link><description> fix
+              by 
+              poi-developers
+              :
+              51273 - Formula Value Cache fix for repeated evaluations</description></item><item><title> add</title><link>http://poi.apache.org//changes.html</link><description> add
+              by 
+              poi-developers
+              :
+              51171 - Improved performance of SharedValueManager </description></item><item><title> fix</title><link>http://poi.apache.org//changes.html</link><description> fix
+              by 
+              poi-developers
+              :
+              51236 - XSSF set colour support for black/white to match getter</description></item><item><title> add</title><link>http://poi.apache.org//changes.html</link><description> add
+              by 
+              poi-developers
+              :
+              51196 - Initial support for Spreadsheet Chart API</description></item><item><title> add</title><link>http://poi.apache.org//changes.html</link><description> add
+              by 
+              poi-developers
+              :
+              Add support for OOXML Agile Encryption</description></item><item><title> add</title><link>http://poi.apache.org//changes.html</link><description> add
+              by 
+              poi-developers
+              :
+              51160 - Initial version of SXSSF, a low memory foortprint API to produce xlsx files</description></item><item><title> fix</title><link>http://poi.apache.org//changes.html</link><description> fix
+              by 
+              poi-developers
+              :
+              51171 - Improved performance of opening large .xls files</description></item><item><title> add</title><link>http://poi.apache.org//changes.html</link><description> add
+              by 
+              poi-developers
+              :
+              51172 - Add XWPF support for GIF pictures</description></item><item><title> add</title><link>http://poi.apache.org//changes.html</link><description> add
+              by 
+              poi-developers
+              :
+              NPOIFS Mini Streams now support extending the underlying big block stream to fit more data</description></item><item><title> fix</title><link>http://poi.apache.org//changes.html</link><description> fix
+              by 
+              poi-developers
+              :
+              51148 - XWPFDocument now properly tracks paragraphs and tables when adding/removing them</description></item><item><title> fix</title><link>http://poi.apache.org//changes.html</link><description> fix
+              by 
+              poi-developers
+              :
+              51153 - Correct sizing of LbsDataSubRecord with unused padding fields</description></item><item><title> fix</title><link>http://poi.apache.org//changes.html</link><description> fix
+              by 
+              poi-developers
+              :
+              51143 - NameCommentRecord correction for writing non ASCII strings</description></item><item><title> fix</title><link>http://poi.apache.org//changes.html</link><description> fix
+              by 
+              poi-developers
+              :
+              51112 - Correct XWPFTable tracking of new rows</description></item><item><title> fix</title><link>http://poi.apache.org//changes.html</link><description> fix
+              by 
+              poi-developers
+              :
+              51113 - Correct XWPFParagraph tracking of inserted runs</description></item><item><title> fix</title><link>http://poi.apache.org//changes.html</link><description> fix
+              by 
+              poi-developers
+              :
+              51111 - Correct XWPFParagraph tracking of new runs</description></item><item><title> fix</title><link>http://poi.apache.org//changes.html</link><description> fix
+              by 
+              poi-developers
+              :
+              51115 - Handle DataFormatter escaping of "." in the same way as "-" and "/"</description></item><item><title> fix</title><link>http://poi.apache.org//changes.html</link><description> fix
+              by 
+              poi-developers
+              :
+              51100 - Fix IOUtils issue for NPOIFS reading from an InputStream where every block is full</description></item><item><title> fix</title><link>http://poi.apache.org//changes.html</link><description> fix
+              by 
+              poi-developers
+              :
+              50956 - Correct XSSF cell style cloning between workbooks</description></item><item><title> add</title><link>http://poi.apache.org//changes.html</link><description> add
+              by 
+              poi-developers
+              :
+              Add get/setForceFormulaRecalculation for XSSF, and promote the methods to the common usermodel Sheet</description></item><item><title> fix</title><link>http://poi.apache.org//changes.html</link><description> fix
+              by 
+              poi-developers
+              :
+              Tweak the logic for sizing the HSSFCells array on a HSSFRow to reduce memory over allocation in many use cases</description></item><item><title> add</title><link>http://poi.apache.org//changes.html</link><description> add
+              by 
+              poi-developers
+              :
+              49765 - Support for adding a picture to a XSSFRun</description></item><item><title> fix</title><link>http://poi.apache.org//changes.html</link><description> fix
+              by 
+              poi-developers
+              :
+              Rename/Move xssf.model.Table to xssf.usermodel.XSSFTable as it now has usermodel-like features</description></item><item><title> fix</title><link>http://poi.apache.org//changes.html</link><description> fix
+              by 
+              poi-developers
+              :
+              51061 - Correct target URI for new XSSF Tables</description></item><item><title> add</title><link>http://poi.apache.org//changes.html</link><description> add
+              by 
+              poi-developers
+              :
+              Initial support for XSSF Charts. Provides easy access to the underlying CTChart object via the Sheet Drawing, but no high level interface onto the chart contents as yet.</description></item><item><title> fix</title><link>http://poi.apache.org//changes.html</link><description> fix
+              by 
+              poi-developers
+              :
+              50884 - XSSF and HSSF freeze panes now behave the same</description></item><item><title> add</title><link>http://poi.apache.org//changes.html</link><description> add
+              by 
+              poi-developers
+              :
+              Support for adding a table to a XSSFSheet</description></item><item><title> add</title><link>http://poi.apache.org//changes.html</link><description> add
+              by 
+              poi-developers
+              :
+              Improve HSMF MAPIMessage access to the HTML and RTF versions of the message body (where available)</description></item><item><title> add</title><link>http://poi.apache.org//changes.html</link><description> add
+              by 
+              poi-developers
+              :
+              Add new method to HSMF of MAPIMessage.has7BitEncodingStrings() to make it easier to decide when encoding guessing is needed</description></item><item><title> fix</title><link>http://poi.apache.org//changes.html</link><description> fix
+              by 
+              poi-developers
+              :
+              OutlookTextExtractor now requests 7 bit encoding guessing</description></item><item><title> add</title><link>http://poi.apache.org//changes.html</link><description> add
+              by 
+              poi-developers
+              :
+              Improve HSMF encoding guessing for 7 bit fields in MAPIMessage</description></item><item><title> add</title><link>http://poi.apache.org//changes.html</link><description> add
+              by 
+              poi-developers
+              :
+              Allow HSMF access to the HTML body contents in MAPIMessage</description></item></channel></rss>
