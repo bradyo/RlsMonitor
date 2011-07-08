@@ -7,7 +7,7 @@ import java.util.*;
  */
 public class MotherCell 
 {
-    public enum EndState {DEAD, LOST, OMIT, NO_BUD, SMALL_BUD, LARGE_BUD, CLUSTER};
+    public enum EndState {DEAD, LOST, OMIT, FLAGGED, NO_BUD, SMALL_BUD, LARGE_BUD, CLUSTER};
     
     private Integer id;
     private List<Integer> divisionCounts;
@@ -52,6 +52,10 @@ public class MotherCell
     
     public boolean isOmitted() {
         return (endState == EndState.OMIT);
+    }
+    
+    public boolean isFlagged() {
+        return (endState == EndState.FLAGGED);
     }
     
     public Boolean isComplete() {

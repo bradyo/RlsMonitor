@@ -22,12 +22,14 @@ public class DataFileParser
     public static final String KILLED_CODE = "x";
     public static final String LOST_CODE = "lost";
     public static final String OMIT_CODE = "omit";
+    public static final String FLAG_CODE = "flag";
     public static final String END_CODE_NO_BUD = "u";
     public static final String END_CODE_SMALL_BUD = "s";
     public static final String END_CODE_LARGE_BUD = "l";
     public static final String END_CODE_CLUSTER = "c";
 
     private Map<Integer,MotherCellSet> cellSetMap;
+    
 
     public DataFileParser() {
         cellSetMap = new HashMap();
@@ -53,13 +55,18 @@ public class DataFileParser
             throw new Exception("failed to get worksheet 0");
         }
         
+        // get comment from header
+        Row headerRow = sheet.getRow(0);
+        String comment = getComment(headerRow);
+        
         // create cell sets for each id
         for (Integer setId : setIds) {
             MotherCellSet motherCellSet = new MotherCellSet();
+            motherCellSet.setComment(comment);
             motherCellSet.setId(setId);
             cellSetMap.put(setId, motherCellSet);
         }
-        
+
         // read rows and fill in cell sets
         
         Integer rowIndex = DATA_START_ROW_INDEX;
@@ -92,6 +99,15 @@ public class DataFileParser
             }
             rowIndex++;
         }
+    }
+    
+    private String getComment(Row row) {
+        String comment = null;
+        String[] headerValues = getRowValues(row);
+        if (headerValues.length > 1) {
+            comment = headerValues[1];
+        }
+        return comment;
     }
     
     private ArrayList<Integer> getFilenameSetIds(String filename) {
@@ -179,6 +195,16 @@ public class DataFileParser
             }
             else if (value.equalsIgnoreCase(OMIT_CODE)) {
                 cell.setEndState(monitor.MotherCell.EndState.OMIT);
+                
+                // take next value as comment
+                if (columnIndex + 1 < values.length) {
+                    String comment = values[columnIndex + 1];
+                    cell.setComment(comment);
+                }
+                doneScanning = true;
+            }
+            else if (value.equalsIgnoreCase(FLAG_CODE)) {
+                cell.setEndState(monitor.MotherCell.EndState.FLAGGED);
                 
                 // take next value as comment
                 if (columnIndex + 1 < values.length) {

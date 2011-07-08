@@ -16,6 +16,7 @@ public class MotherCellSet
     private Integer cellCount;
     private Strain strain;
     private List<MotherCell> cells;
+    private String comment;
 
     public MotherCellSet() {
         cells = new ArrayList();
@@ -76,6 +77,14 @@ public class MotherCellSet
     public Strain getStrain() {
         return strain;
     }
+
+    public String getComment() {
+        return comment;
+    }
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+    
     
     public void setCells(List<MotherCell> cells) {
         this.cells = cells;
