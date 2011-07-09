@@ -36,7 +36,7 @@ public class TemplateReport
         FileUtils.copyFile(templateFile, temporaryFile);
         
         // open the workbook
-        workbook = new XSSFWorkbook(temporaryFile.getPath());
+        workbook = new XSSFWorkbook(new FileInputStream(temporaryFile));
         evaluator = workbook.getCreationHelper().createFormulaEvaluator();
         
         // generate report
@@ -54,6 +54,13 @@ public class TemplateReport
         catch (Exception e) {
             System.err.println("failed to write report file: " + e.getMessage());
         }
+        
+        // prevent memory leaks?
+        workbook = null;
+        evaluator = null;
+        Runtime runtime = Runtime.getRuntime();
+        runtime.gc();
+        runtime.freeMemory();
     }
     
     private void populateDataSheet() throws Exception {
@@ -114,8 +121,14 @@ public class TemplateReport
                     cell.setCellType(Cell.CELL_TYPE_NUMERIC);
                     cell.setCellValue(divisions.doubleValue());
                 }
+                
+                // prevent memory leaks?
+                row = null;
             }
         }
+        
+        // prevent memory leaks?
+        dataSheet = null;
     }
     
     private void populateInfoSheet() throws Exception {
@@ -154,7 +167,14 @@ public class TemplateReport
                 }
                 setCellValue(row, 8, cellSet.getComment());
             }           
+            
+            // prevent memory leaks?
+            row = null;
         }
+        
+        // prevent memory leaks?
+        headerRow = null;
+        sheet = null;
     }
     
     private void populateStatusSheet() throws Exception {
@@ -218,8 +238,15 @@ public class TemplateReport
                     setCellValue(row, 3, motherCell.getComment());
                     rowOffset++;
                 }
+                
+                // prevent memory leaks?
+                row = null;
             }
         }
+        
+        // prevent memory leaks?
+        sheet = null;
+        headerRow = null;
     }
     
     private Row getRow(Sheet sheet, int rowIndex) {
