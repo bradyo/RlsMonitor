@@ -127,7 +127,7 @@ public class TemplateReport
         
         // set column headers
         String[] headers = {"Set ID", "Label", "Strain", "Media", "Background", 
-            "Mating Type", "Short Genotype", "Full Genotype"};
+            "Mating Type", "Short Genotype", "Full Genotype", "Comment"};
         Row headerRow = getRow(sheet, 0);
         for (int i = 0; i < headers.length; i++) {
             String label = headers[i];
@@ -152,6 +152,7 @@ public class TemplateReport
                     setCellValue(row, 6, strain.getShortGenotype());
                     setCellValue(row, 7, strain.getFullGenotype());
                 }
+                setCellValue(row, 8, cellSet.getComment());
             }           
         }
     }
@@ -164,13 +165,14 @@ public class TemplateReport
         }
         
         // set column headers
-        String[] headers = {"Set ID", "Code", "Comment"};
+        String[] headers = {"Set ID", "Row ID", "Code", "Comment"};
         Row headerRow = getRow(sheet, 0);
         for (int i = 0; i < headers.length; i++) {
             String label = headers[i];
             setCellValue(headerRow, i, label);
         }
         
+        int rowOffset = 1;
         Integer maxCellSetId = experiment.getMaxCellSetId();
         for (Integer setId = 1; setId <= maxCellSetId; setId++) {
             MotherCellSet cellSet = experiment.getCellSet(setId);
@@ -189,31 +191,32 @@ public class TemplateReport
             
             // each template set has 20 rows
             for (int iSetRow = 0; iSetRow < 20; iSetRow++) {
-                // get target row
-                Row row = sheet.getRow((setId - 1) * 20 + iSetRow);
-                if (row == null) {
-                    row = sheet.createRow((setId - 1) * 20 + iSetRow);
-                }
-                
-                // write the set id to the left of the first set row
-                if (iSetRow == 0) {
-                    setCellValue(row, 0, setId.toString());
-                }
-
                 // skip rows without cells (provides padding up to 20 cells)
                 if (iSetRow >= motherCells.size()) {
                     continue;
                 }
                     
+                // get target row
+                Row row = sheet.getRow(rowOffset);
+                if (row == null) {
+                    row = sheet.createRow(rowOffset);
+                }
+                
                 // if mother cell was lost, skip writing divisions
                 MotherCell motherCell = motherCells.get(iSetRow);
                 if (motherCell.isFlagged()) {
-                    setCellValue(row, 1, "flag");
-                    setCellValue(row, 2, motherCell.getComment());
+                    setCellValue(row, 0, cellSet.getId().toString());
+                    setCellValue(row, 1, motherCell.getId().toString());
+                    setCellValue(row, 2, "flag");
+                    setCellValue(row, 3, motherCell.getComment());
+                    rowOffset++;
                 }
                 else if (motherCell.isOmitted()) {
-                    setCellValue(row, 1, "omit");
-                    setCellValue(row, 2, motherCell.getComment());
+                    setCellValue(row, 0, cellSet.getId().toString());
+                    setCellValue(row, 1, motherCell.getId().toString());
+                    setCellValue(row, 2, "omit");
+                    setCellValue(row, 3, motherCell.getComment());
+                    rowOffset++;
                 }
             }
         }
