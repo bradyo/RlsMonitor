@@ -158,9 +158,17 @@ public class TemplateReport
     
     private void populateStatusSheet() throws Exception {
         // insert dissection data into print worksheet
-        Sheet dataSheet = workbook.getSheet(STATUS_SHEET_NAME);
-        if (dataSheet == null) {
-            dataSheet = workbook.createSheet(STATUS_SHEET_NAME);
+        Sheet sheet = workbook.getSheet(STATUS_SHEET_NAME);
+        if (sheet == null) {
+            sheet = workbook.createSheet(STATUS_SHEET_NAME);
+        }
+        
+        // set column headers
+        String[] headers = {"Set ID", "Code", "Comment"};
+        Row headerRow = getRow(sheet, 0);
+        for (int i = 0; i < headers.length; i++) {
+            String label = headers[i];
+            setCellValue(headerRow, i, label);
         }
         
         Integer maxCellSetId = experiment.getMaxCellSetId();
@@ -182,16 +190,14 @@ public class TemplateReport
             // each template set has 20 rows
             for (int iSetRow = 0; iSetRow < 20; iSetRow++) {
                 // get target row
-                Row row = dataSheet.getRow((setId - 1) * 20 + iSetRow);
+                Row row = sheet.getRow((setId - 1) * 20 + iSetRow);
                 if (row == null) {
-                    row = dataSheet.createRow((setId - 1) * 20 + iSetRow);
+                    row = sheet.createRow((setId - 1) * 20 + iSetRow);
                 }
                 
                 // write the set id to the left of the first set row
                 if (iSetRow == 0) {
-                    Cell cell = row.createCell(0);
-                    cell.setCellType(Cell.CELL_TYPE_STRING);
-                    cell.setCellValue(setId);
+                    setCellValue(row, 0, setId.toString());
                 }
 
                 // skip rows without cells (provides padding up to 20 cells)
@@ -201,14 +207,13 @@ public class TemplateReport
                     
                 // if mother cell was lost, skip writing divisions
                 MotherCell motherCell = motherCells.get(iSetRow);
-                
                 if (motherCell.isFlagged()) {
-                    setCellValue(row, 2, "Flagged");
-                    setCellValue(row, 3, motherCell.getComment());
+                    setCellValue(row, 1, "flag");
+                    setCellValue(row, 2, motherCell.getComment());
                 }
                 else if (motherCell.isOmitted()) {
-                    setCellValue(row, 2, "Omit");
-                    setCellValue(row, 3, motherCell.getComment());
+                    setCellValue(row, 1, "omit");
+                    setCellValue(row, 2, motherCell.getComment());
                 }
             }
         }
