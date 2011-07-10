@@ -10,10 +10,8 @@ public class CsvParser {
     
     
     public void parseFile(File file) {
-        
         experiment.setNumber(513);
         experiment.setComment("github practice!");
-
     }
     
     public Experiment getExperiment() {
