@@ -4,18 +4,24 @@ import java.io.*;
 import java.util.*;
 import monitor.*;
 
+/**
+ * Parses MotherCellSet objects out of an experiment CSV file.
+ */
 public class CsvParser {
  
-    private Experiment experiment;
-    
+    private List<MotherCellSet> motherCellSets;
+
+    public CsvParser() {
+        motherCellSets = new ArrayList();
+    }
     
     public void parseFile(File file) {
-        experiment.setNumber(513);
-        experiment.setComment("github practice!");
+        
+        // TODO
+        
     }
     
-    public Experiment getExperiment() {
-        return experiment;
+    public List<MotherCellSet> getCellSets() {
+        return motherCellSets;
     }
-    
 }
