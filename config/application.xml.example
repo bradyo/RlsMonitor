@@ -3,24 +3,24 @@
     <data>
         <dataSource>
             <facility>Kaeberlein Lab</facility>
-            <folder>test-data/rls data kaeblab</folder>
+            <folder>my-data/rls data kaeblab</folder>
         </dataSource>
         <dataSource>
             <facility>Buck Lab</facility>
-            <folder>test-data/rls data buck</folder>
+            <folder>my-data/rls data buck</folder>
         </dataSource>
     </data>
         
     <reports>
-        <folder>test-data/rls reports</folder>
-        <templatesFolder>test-data/rls report templates</templatesFolder>
+        <folder>my-data/rls reports</folder>
+        <templatesFolder>my-data/rls report templates</templatesFolder>
     </reports>
 
     <database>
         <host>localhost</host>
-        <name>core-test</name>
-        <username>root</username>
-        <password>happy</password>
+        <name>core</name>
+        <username>username</username>
+        <password>password</password>
     </database>
     
     <coreService>
