@@ -13,6 +13,7 @@ public class MotherCell
     private List<Integer> divisionCounts;
     private EndState endState;
     private String comment;
+    private Integer lifespan;
 
     public MotherCell() {
         divisionCounts = new ArrayList();
@@ -30,6 +31,7 @@ public class MotherCell
     }
     public void setDivisionCounts(List<Integer> divisionCounts) {
         this.divisionCounts = divisionCounts;
+        this.lifespan = null;
     }
     
     public EndState getEndState() {
@@ -63,6 +65,16 @@ public class MotherCell
     }
 
     public Integer getLifespan() {
+        if (lifespan == null) {
+            lifespan = calculateLifespan();
+        }
+        return lifespan;
+    }
+    public void setLifespan(Integer lifespan) {
+        this.lifespan = lifespan;
+    }
+
+    public Integer calculateLifespan() {
         if (divisionCounts.isEmpty() || isLost() || isOmitted()) {
             return null;
         }
