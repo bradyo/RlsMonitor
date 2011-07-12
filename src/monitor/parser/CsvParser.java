@@ -18,8 +18,9 @@ public class CsvParser {
     
     public void parseFile(File file) throws Exception {
         
-        CSVReader reader = new CSVReader(new FileReader(file));
-        reader.readAll();
+        FileReader fileReader = new FileReader(file); 
+        CSVReader csvReader = new CSVReader(fileReader);
+        String[] values = csvReader.readNext();
         
     }
     

@@ -72,7 +72,7 @@ public class CsvParserTest {
     }
     
     @Test
-    public void testParseFile() {
+    public void testParseFile() throws Exception {
         File file = new File(new File(".").getAbsolutePath()
                 + File.separator + "test-data" 
                 + File.separator + "input csv"
