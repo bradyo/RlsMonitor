@@ -3,6 +3,7 @@ package monitor.parser;
 import java.io.*;
 import java.util.*;
 import monitor.*;
+import au.com.bytecode.opencsv.CSVReader;
 
 /**
  * Parses MotherCellSet objects out of an experiment CSV file.
@@ -15,9 +16,10 @@ public class CsvParser {
         motherCellSets = new ArrayList();
     }
     
-    public void parseFile(File file) {
+    public void parseFile(File file) throws Exception {
         
-        // TODO
+        CSVReader reader = new CSVReader(new FileReader(file));
+        
         
     }
     
