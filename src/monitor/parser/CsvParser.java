@@ -19,7 +19,7 @@ public class CsvParser {
     public void parseFile(File file) throws Exception {
         
         CSVReader reader = new CSVReader(new FileReader(file));
-        
+        reader.readAll();
         
     }
     
