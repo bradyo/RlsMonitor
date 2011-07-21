@@ -21,8 +21,29 @@ public class CsvParser {
         FileReader fileReader = new FileReader(file); 
         CSVReader csvReader = new CSVReader(fileReader);
         String[] values = csvReader.readNext();
+        csvReader.readNext();
         
+        List<MotherCellSet> cellSets = new ArrayList();
+        for (int row = 0; row < cellSets.length(); row++) {
+            while (cellSets.hasNextLine()) {
+                MotherCellSet cellSet = new MotherCellSet();
+                cellSet.setId(row + 1);
+                cellSet.setReference(references[row]);
+                cellSet.setLabel(labels[row]);
+                cellSet.setStrainName(strainNames[row]);
+                cellSet.setMedia(medias[row]);
+                cellSet.setTemperature(temperatures[row]);
+           
+            
+            
+            
+            }
+
+        }
+    
+    
     }
+
     
     public List<MotherCellSet> getCellSets() {
         return motherCellSets;
