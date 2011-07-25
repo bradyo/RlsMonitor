@@ -11,6 +11,7 @@ import au.com.bytecode.opencsv.CSVReader;
 public class CsvParser {
  
     private List<MotherCellSet> motherCellSets;
+    private SortedMap<String, String> sub = new TreeMap<String, String>();
 
     public CsvParser() {
         motherCellSets = new ArrayList();
@@ -34,11 +35,23 @@ public class CsvParser {
                 cellSet.setMedia(medias[row]);
                 cellSet.setTemperature(temperatures[row]);
            
-            
+                List<MotherCell> cells = new ArrayList();
+                Integer[] rowLifespans = lifespans[rowIndex];
+                for (Integer cellIndex = 0; cellIndex < rowLifespans.length; cellIndex++) {
+                    MotherCell motherCell = new MotherCell();
+                    motherCell.setId(cellIndex);
+                    motherCell.setLifespan(rowLifespans[cellIndex]);
+                    cells.add(motherCell);
+                }
             
             
             }
-
+           
+            
+            startIndex = columnMap.get("lifespan");
+            
+            
+            endIndex = values.length - 1;
         }
     
     
