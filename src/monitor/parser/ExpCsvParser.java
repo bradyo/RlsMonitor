@@ -8,11 +8,11 @@ import au.com.bytecode.opencsv.CSVReader;
 /**
  * Parses MotherCellSet objects out of an experiment CSV file.
  */
-public class CsvParser {
+public class ExpCsvParser {
  
     private List<MotherCellSet> motherCellSets;
 
-    public CsvParser() {
+    public ExpCsvParser() {
         motherCellSets = new ArrayList();
     }
     
@@ -41,20 +41,20 @@ public class CsvParser {
             cellSet.setReference(reference);
             
             // todo: add other data to mother cell set
-            cellSet.setLabel(labels[row]);
-            cellSet.setStrainName(strainNames[row]);
-            cellSet.setMedia(medias[row]);
-            cellSet.setTemperature(temperatures[row]);
+//            cellSet.setLabel(labels[row]);
+//            cellSet.setStrainName(strainNames[row]);
+//            cellSet.setMedia(medias[row]);
+//            cellSet.setTemperature(temperatures[row]);
 
             // add cells
             List<MotherCell> cells = new ArrayList();
-            Integer[] rowLifespans = lifespans[rowIndex];
-            for (Integer cellIndex = 0; cellIndex < rowLifespans.length; cellIndex++) {
-                MotherCell motherCell = new MotherCell();
-                motherCell.setId(cellIndex);
-                motherCell.setLifespan(rowLifespans[cellIndex]);
-                cells.add(motherCell);
-            }
+//            Integer[] rowLifespans = lifespans[rowIndex];
+//            for (Integer cellIndex = 0; cellIndex < rowLifespans.length; cellIndex++) {
+//                MotherCell motherCell = new MotherCell();
+//                motherCell.setId(cellIndex);
+//                motherCell.setLifespan(rowLifespans[cellIndex]);
+//                cells.add(motherCell);
+//            }
             cellSet.setCells(cells);
             
             // save mother cell set internally

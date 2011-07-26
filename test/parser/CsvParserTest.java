@@ -9,26 +9,6 @@ import static org.junit.Assert.*;
 
 public class CsvParserTest {
     
-    public CsvParserTest() {
-    }
-
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-    }
-
-    @AfterClass
-    public static void tearDownClass() throws Exception {
-    }
-    
-    @Before
-    public void setUp() {
-        
-    }
-    
-    @After
-    public void tearDown() {
-    }
-    
     /**
      * Gets a list of expected mother cell sets.
      * @return List<MotherCellSet>
@@ -79,7 +59,7 @@ public class CsvParserTest {
                 + File.separator + "test.csv");
         
         // create parser and 
-        CsvParser parser = new CsvParser();
+        ExpCsvParser parser = new ExpCsvParser();
         parser.parseFile(file);
         
         List<MotherCellSet> expectedCellSets = getExpectedCellSets();
