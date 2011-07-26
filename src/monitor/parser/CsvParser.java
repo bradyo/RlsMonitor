@@ -11,7 +11,6 @@ import au.com.bytecode.opencsv.CSVReader;
 public class CsvParser {
  
     private List<MotherCellSet> motherCellSets;
-    private SortedMap<String, String> sub = new TreeMap<String, String>();
 
     public CsvParser() {
         motherCellSets = new ArrayList();
@@ -22,39 +21,38 @@ public class CsvParser {
         FileReader fileReader = new FileReader(file); 
         CSVReader csvReader = new CSVReader(fileReader);
         String[] values = csvReader.readNext();
-        csvReader.readNext();
         
-        List<MotherCellSet> cellSets = new ArrayList();
-        for (int row = 0; row < cellSets.length(); row++) {
-            while (cellSets.hasNextLine()) {
-                MotherCellSet cellSet = new MotherCellSet();
-                cellSet.setId(row + 1);
-                cellSet.setReference(references[row]);
-                cellSet.setLabel(labels[row]);
-                cellSet.setStrainName(strainNames[row]);
-                cellSet.setMedia(medias[row]);
-                cellSet.setTemperature(temperatures[row]);
-           
-                List<MotherCell> cells = new ArrayList();
-                Integer[] rowLifespans = lifespans[rowIndex];
-                for (Integer cellIndex = 0; cellIndex < rowLifespans.length; cellIndex++) {
-                    MotherCell motherCell = new MotherCell();
-                    motherCell.setId(cellIndex);
-                    motherCell.setLifespan(rowLifespans[cellIndex]);
-                    cells.add(motherCell);
-                }
-            
-            
-            }
-           
-            
-            startIndex = columnMap.get("lifespan");
-            
-            
-            endIndex = values.length - 1;
+        // save which columns have which row indexes in a hash map
+        Map<String,Integer> headerIndexMap = new HashMap();
+        for(Integer i = 0; i < values.length; i++) {
+            String columnName = values[i];
+            headerIndexMap.put(columnName, i);
         }
-    
-    
+        
+        // loop over data lines and create a cell set object for each
+        List<MotherCellSet> cellSets = new ArrayList();
+        Integer row = 1; // start at 1, since we already read header line above
+        while ((values = csvReader.readNext()) != null) {
+            // todo: create mother cell set
+            MotherCellSet cellSet = new MotherCellSet();
+            cellSet.setId(row + 1);
+            cellSet.setReference(references[row]);
+            cellSet.setLabel(labels[row]);
+            cellSet.setStrainName(strainNames[row]);
+            cellSet.setMedia(medias[row]);
+            cellSet.setTemperature(temperatures[row]);
+
+            List<MotherCell> cells = new ArrayList();
+            Integer[] rowLifespans = lifespans[rowIndex];
+            for (Integer cellIndex = 0; cellIndex < rowLifespans.length; cellIndex++) {
+                MotherCell motherCell = new MotherCell();
+                motherCell.setId(cellIndex);
+                motherCell.setLifespan(rowLifespans[cellIndex]);
+                cells.add(motherCell);
+            }
+            
+            row++;
+        }
     }
 
     
