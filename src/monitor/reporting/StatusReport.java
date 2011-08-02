@@ -27,7 +27,7 @@ public class StatusReport
             for (Integer setNumber : cellSetsMap.keySet()) {
                 MotherCellSet cellSet = cellSetsMap.get(setNumber);
                 if (!cellSet.isComplete()) {
-                    writer.write(experiment.getNumber() + "," + cellSet.getId() + "\n");
+                    writer.write(experiment.getName() + "," + cellSet.getId() + "\n");
                 }
             }
         }

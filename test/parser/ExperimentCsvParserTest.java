@@ -7,7 +7,7 @@ import java.io.*;
 import org.junit.*;
 import static org.junit.Assert.*;
 
-public class CsvParserTest {
+public class ExperimentCsvParserTest {
     
     /**
      * Gets a list of expected mother cell sets.
@@ -17,8 +17,8 @@ public class CsvParserTest {
         String[] references = {"3", "1,2", "1"};
         String[] labels = {"coq1", "atg32", "coq9"};
         String[] strainNames = {"JS27", "JS553", "DC:170F8"};
-        String[] medias = {"media 1", "media 2", "media 3"};
-        Float[] temperatures = {(float)30.00, (float)31.13, (float)32.00};
+        String[] medias = {"media 1, wth comma", "media 2", "media 3"};
+        Float[] temperatures = {(float)30.12, (float)31.13, (float)32.00};
         Integer[][] lifespans = {
             {34, 41, 30, 15, 23, 39, 19, 42, 15, 19}, 
             {8, 14, 46, 25, 7, 25, 35, 26, 2, 29}, 
@@ -59,7 +59,7 @@ public class CsvParserTest {
                 + File.separator + "test.csv");
         
         // create parser and 
-        ExpCsvParser parser = new ExpCsvParser();
+        CsvExperimentParser parser = new CsvExperimentParser();
         parser.parseFile(file);
         
         List<MotherCellSet> expectedCellSets = getExpectedCellSets();

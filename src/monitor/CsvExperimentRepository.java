@@ -7,44 +7,44 @@ import java.util.*;
 /**
  * Fetches Experiment objects from data sources.
  */
-public class CsvRepository 
+public class CsvExperimentRepository 
 {
-    private HashMap<Integer,Experiment> experimentMap;
+    private HashMap<String,Experiment> experimentMap; // experiment name => experiment
     private KeyRepository keyRepository;
     private DataFolderRepository dataFolderRepository;
 
-    public CsvRepository(KeyRepository keyRepository, 
+    public CsvExperimentRepository(KeyRepository keyRepository, 
             DataFolderRepository dataFolderRepository) {
         this.keyRepository = keyRepository;
         this.dataFolderRepository = dataFolderRepository;
         this.experimentMap = new HashMap();
     }
 
-    public Experiment getExperiment(Integer experimentNumber) throws Exception {
+    public Experiment getExperiment(String experimentName) throws Exception {
         // get experiment from cache if possible, otherwise build up from data
         Experiment experiment;
-        if (experimentMap.containsKey(experimentNumber)) {
-            experiment = experimentMap.get(experimentNumber);
+        if (experimentMap.containsKey(experimentName)) {
+            experiment = experimentMap.get(experimentName);
         } else {
-            experiment = buildExperiment(experimentNumber);
-            experimentMap.put(experimentNumber, experiment);
+            experiment = buildExperiment(experimentName);
+            experimentMap.put(experimentName, experiment);
         }
         return experiment;
     }
     
-    private Experiment buildExperiment(Integer experimentNumber) throws Exception {
+    private Experiment buildExperiment(String experimentName) throws Exception {
         Experiment experiment = new Experiment();
-        experiment.setNumber(experimentNumber);        
+        experiment.setName(experimentName);        
         
         // populate cell sets
         Map<Integer,MotherCellSetKey> cellSetKeyMap = new HashMap();
         try {
-            cellSetKeyMap = keyRepository.getCellSetKeyMap(experimentNumber);
+            cellSetKeyMap = keyRepository.getCellSetKeyMap(experimentName);
         } catch (Exception e) {
             System.err.println("failed to load key data: " + e.getMessage());
         }
         
-        DataFolder dataFolder = dataFolderRepository.getDataFolder(experimentNumber);
+        DataFolder dataFolder = dataFolderRepository.getDataFolder(experimentName);
         boolean isComplete;
         if (dataFolder.getDeadDataFiles().isEmpty()) {
             isComplete = false;
@@ -104,19 +104,19 @@ public class CsvRepository
             writer.close();
             experiment.setComment(writer.toString().trim());
         }
-        
         return experiment;
     }
 
     List<Experiment> getExperimentsByFacility(String facilityName) throws Exception {
         List<Experiment> experiments = new ArrayList();
-        List<Integer> numbers = dataFolderRepository.getFacilityExperimentNumbers(facilityName);
-        for (Integer number : numbers) {
+        List<String> experimentNames 
+                = dataFolderRepository.getFacilityExperimentNames(facilityName);
+        for (String experimentName : experimentNames) {
             try {
-                Experiment experiment = getExperiment(number);
+                Experiment experiment = getExperiment(experimentName);
                 experiments.add(experiment);
             } catch (Exception e) {
-                System.err.println("failed to get experiment " + number);
+                System.err.println("failed to get experiment " + experimentName);
             }
         }
         return experiments;

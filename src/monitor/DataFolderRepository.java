@@ -8,7 +8,7 @@ public class DataFolderRepository
     public static final String COMPLETED_FOLDER = "completed";
     
     private Collection<DataSource> dataSources;
-    private Map<Integer,DataFolder> dataFolderMap;
+    private Map<String,DataFolder> dataFolderMap; // experiment name => DataFolder
 
     public DataFolderRepository(Collection<DataSource> dataSources) {
         this.dataSources = dataSources;
@@ -39,9 +39,9 @@ public class DataFolderRepository
     private void addFolderToMap(String facilityName, File folder) {
         for (File file : folder.listFiles()) {
             if (isExperimentFolder(file)) {
-                Integer experimentNumber = Integer.parseInt(file.getName());
-                DataFolder dataFolder = new DataFolder(facilityName, experimentNumber, file);
-                dataFolderMap.put(experimentNumber, dataFolder);
+                String experimentName = file.getName();
+                DataFolder dataFolder = new DataFolder(facilityName, experimentName, file);
+                dataFolderMap.put(experimentName, dataFolder);
             }
         }
     }
@@ -53,8 +53,8 @@ public class DataFolderRepository
         return false;
     }
     
-    public DataFolder getDataFolder(Integer experimentNumber) {
-        return dataFolderMap.get(experimentNumber);
+    public DataFolder getDataFolder(String experimentName) {
+        return dataFolderMap.get(experimentName);
     }
        
     public Collection<DataFolder> findAll() {
@@ -71,13 +71,13 @@ public class DataFolderRepository
         return dataFolders;
     }
     
-    public List<Integer> getFacilityExperimentNumbers(String facilityName) {
-        List<Integer> numbers = new ArrayList();
+    public List<String> getFacilityExperimentNames(String facilityName) {
+        List<String> experimentNames = new ArrayList();
         for (DataFolder dataFolder : dataFolderMap.values()) {
             if (dataFolder.getFacilityName().equals(facilityName)) {
-                numbers.add(dataFolder.getExperimentNumber());
+                experimentNames.add(dataFolder.getExperimentName());
             }
         }
-        return numbers;
+        return experimentNames;
     }
 }

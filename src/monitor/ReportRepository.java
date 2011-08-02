@@ -19,13 +19,13 @@ public class ReportRepository
         this.templateFolder = templateFolder;
     }
     
-    public void updateReports(Integer experimentNumber) {
+    public void updateReports(String experimentName) {
         System.out.println();
-        System.out.println("Updating reports experiment: " + experimentNumber);
+        System.out.println("Updating reports experiment: " + experimentName);
         
         Experiment experiment;
         try {
-            experiment = experimentRepository.getExperiment(experimentNumber);
+            experiment = experimentRepository.getExperiment(experimentName);
         } catch (Exception e) {
             System.err.println("failed to load experiment: " + e.getMessage());
             return;
@@ -62,7 +62,7 @@ public class ReportRepository
         // notify core system about completed experiment
         if (experiment.isComplete()) {
             try {
-                coreService.notifyExperimentComplete(experimentNumber);
+                coreService.notifyExperimentComplete(experimentName);
             } catch (Exception e) {
                 System.err.println("failed to notify core site of completed experiment: " + e.getMessage());
                 System.err.println(e.getStackTrace());
@@ -71,11 +71,10 @@ public class ReportRepository
     }
     
     private void deleteAllReports(Experiment experiment) {
-        Integer experimentNumber = experiment.getNumber();
+        String experimentName = experiment.getName();
         
         // delete incomplete reports
-        File folder = new File(outputFolder 
-                + File.separator + experimentNumber);
+        File folder = new File(outputFolder + File.separator + experimentName);
         if (folder.isDirectory()) {
             for (File file : folder.listFiles()) {
                 file.delete();
@@ -84,9 +83,8 @@ public class ReportRepository
     }
     
     private File getExperimentReportFolder(Experiment experiment) {
-        Integer experimentNumber = experiment.getNumber();
-        File file = new File(outputFolder 
-                + File.separator + experimentNumber);
+        String experimentName = experiment.getName();
+        File file = new File(outputFolder + File.separator + experimentName);
         if (! file.isDirectory()) {
             file.mkdir();
         }
@@ -96,9 +94,9 @@ public class ReportRepository
     private String getDatabaseReportFilename(Experiment experiment) {
         String filename;
         if (experiment.isComplete()) {
-            filename = experiment.getNumber() + ".csv";
+            filename = experiment.getName() + ".csv";
         } else {
-            filename = experiment.getNumber() + "_incomplete.csv";
+            filename = experiment.getName() + "_incomplete.csv";
         }
         return filename;
     }
@@ -106,9 +104,9 @@ public class ReportRepository
     private String getTemplateReportFilename(Experiment experiment, File templateFile) {
         String filename;
         if (experiment.isComplete()) {
-            filename = experiment.getNumber() + "_" + templateFile.getName();
+            filename = experiment.getName() + "_" + templateFile.getName();
         } else {
-            filename = experiment.getNumber() + "_incomplete_" + templateFile.getName();
+            filename = experiment.getName() + "_incomplete_" + templateFile.getName();
         }
         return filename;
     }

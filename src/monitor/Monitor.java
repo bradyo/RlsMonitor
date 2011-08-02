@@ -62,9 +62,9 @@ public class Monitor
         
         Boolean dataSourceChanged = false;
         for (DataFolder dataFolder : dataFolders) {
-            Integer experimentNumber = dataFolder.getExperimentNumber();
-            if (needsNewReports(experimentNumber)) {
-                reportRepository.updateReports(experimentNumber);
+            String experimentName = dataFolder.getExperimentName();
+            if (needsNewReports(experimentName)) {
+                reportRepository.updateReports(experimentName);
                 dataSourceChanged = true;
             }
         }
@@ -80,28 +80,28 @@ public class Monitor
         }
     }
     
-    private Boolean needsNewReports(Integer experimentNumber) {
+    private Boolean needsNewReports(String experimentName) {
         if (templateTracker.isChanged()) {
             return true;
         }
-        if (dataFolderTracker.isChanged(experimentNumber)) {
+        if (dataFolderTracker.isChanged(experimentName)) {
             return true;
         }
-        if (isDatabaseChanged(experimentNumber)) {
+        if (isDatabaseChanged(experimentName)) {
             return true;
         }
         return false;
     }
        
-    private Boolean isDatabaseChanged(Integer experimentNumber) {
+    private Boolean isDatabaseChanged(String experimentName) {
         Boolean hasChanged = false;
         try {
             connection.clearWarnings();
             PreparedStatement stmt = connection.prepareStatement(
                     "SELECT * FROM yeast_rls_update_queue q"
                     + " LEFT JOIN yeast_rls_experiment e ON e.id = q.experiment_id"
-                    + " WHERE e.number = ?");
-            stmt.setInt(1, experimentNumber);
+                    + " WHERE e.name = ?");
+            stmt.setString(1, experimentName);
                 
             ResultSet results = stmt.executeQuery();
             if (results.next()) {

@@ -36,6 +36,7 @@ CREATE TABLE IF NOT EXISTS yeast_rls_experiment (
     id INT AUTO_INCREMENT PRIMARY KEY,
     facility VARCHAR(64),
     number INT NULL,
+    name VARCHAR(64),
     description TEXT NULL,
     key_data TEXT NOT NULL,
     requested_by VARCHAR(64) NOT NULL,

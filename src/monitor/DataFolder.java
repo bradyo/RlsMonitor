@@ -10,14 +10,14 @@ public class DataFolder
     public static final String COMMENTS_FILE_NAME = "comments.txt";
     
     private String facilityName;
-    private Integer experimentNumber;
+    private String experimentName;
     private List<File> workingDataFiles;
     private List<File> deadDataFiles;
     private File commentsFile;
 
-    public DataFolder(String facilityName, Integer experimentNumber, File folder) {
+    public DataFolder(String facilityName, String experimentName, File folder) {
         this.facilityName = facilityName;
-        this.experimentNumber = experimentNumber;
+        this.experimentName = experimentName;
         
         workingDataFiles = new ArrayList();
         for (File file : folder.listFiles()) {
@@ -63,8 +63,8 @@ public class DataFolder
         return facilityName;
     }
     
-    public Integer getExperimentNumber() {
-        return experimentNumber;
+    public String getExperimentName() {
+        return experimentName;
     }
     
     public List<File> getAllFiles() {

@@ -8,17 +8,17 @@ import java.util.Map.*;
  */
 public class Experiment
 {
-    private Integer number;
+    private String name;
     private String comment;
     private Map<Integer,MotherCellSet> cellSetMap = new HashMap();
     
     private boolean isComplete = false;
     
-    public Integer getNumber() {
-        return number;
+    public String getName() {
+        return name;
     }
-    public void setNumber(Integer number) {
-        this.number = number;
+    public void setName(String name) {
+        this.name = name;
     }
     
     public String getComment() {

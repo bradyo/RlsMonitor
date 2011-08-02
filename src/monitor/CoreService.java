@@ -13,9 +13,9 @@ public class CoreService {
         this.apiKey = apiKey;
     }  
 
-    public void notifyExperimentComplete(Integer number) throws Exception {
+    public void notifyExperimentComplete(String experimentName) throws Exception {
         URL url = new URL("http://" + host + "/api/yeastRlsExperimentComplete"
-                + "?number=" + number + "&key=" + apiKey);
+                + "?number=" + experimentName + "&key=" + apiKey);
         System.out.println(url);
             
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();

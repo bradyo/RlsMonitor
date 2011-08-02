@@ -11,7 +11,7 @@ public class KeyRepository {
         this.connection = connection;
     }
     
-    public Map<Integer,MotherCellSetKey> getCellSetKeyMap(Integer experimentNumber)
+    public Map<Integer,MotherCellSetKey> getCellSetKeyMap(String experimentName)
             throws Exception {
         Map<Integer,MotherCellSetKey> map = new HashMap();
             
@@ -19,8 +19,8 @@ public class KeyRepository {
                 "SELECT * FROM yeast_rls_experiment e"
                 + " INNER JOIN yeast_rls_cell_set s ON s.experiment_id = e.id"
                 + " LEFT JOIN yeast_strain y ON y.id = s.strain_id"
-                + " WHERE e.number = ?");
-        stmt.setInt(1, experimentNumber);
+                + " WHERE e.name = ?");
+        stmt.setString(1, experimentName);
                 
         ResultSet results = stmt.executeQuery();
         while (results.next()) {

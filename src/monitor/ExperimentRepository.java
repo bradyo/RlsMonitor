@@ -9,7 +9,7 @@ import java.util.*;
  */
 public class ExperimentRepository 
 {
-    private HashMap<Integer,Experiment> experimentMap;
+    private HashMap<String,Experiment> experimentMap; // name => expeirment
     private KeyRepository keyRepository;
     private DataFolderRepository dataFolderRepository;
 
@@ -20,31 +20,31 @@ public class ExperimentRepository
         this.experimentMap = new HashMap();
     }
 
-    public Experiment getExperiment(Integer experimentNumber) throws Exception {
+    public Experiment getExperiment(String name) throws Exception {
         // get experiment from cache if possible, otherwise build up from data
         Experiment experiment;
-        if (experimentMap.containsKey(experimentNumber)) {
-            experiment = experimentMap.get(experimentNumber);
+        if (experimentMap.containsKey(name)) {
+            experiment = experimentMap.get(name);
         } else {
-            experiment = buildExperiment(experimentNumber);
-            experimentMap.put(experimentNumber, experiment);
+            experiment = buildExperiment(name);
+            experimentMap.put(name, experiment);
         }
         return experiment;
     }
     
-    private Experiment buildExperiment(Integer experimentNumber) throws Exception {
+    private Experiment buildExperiment(String name) throws Exception {
         Experiment experiment = new Experiment();
-        experiment.setNumber(experimentNumber);        
+        experiment.setName(name);        
         
         // populate cell sets
         Map<Integer,MotherCellSetKey> cellSetKeyMap = new HashMap();
         try {
-            cellSetKeyMap = keyRepository.getCellSetKeyMap(experimentNumber);
+            cellSetKeyMap = keyRepository.getCellSetKeyMap(name);
         } catch (Exception e) {
             System.err.println("failed to load key data: " + e.getMessage());
         }
         
-        DataFolder dataFolder = dataFolderRepository.getDataFolder(experimentNumber);
+        DataFolder dataFolder = dataFolderRepository.getDataFolder(name);
         boolean isComplete;
         if (dataFolder.getDeadDataFiles().isEmpty()) {
             isComplete = false;
@@ -110,13 +110,14 @@ public class ExperimentRepository
 
     List<Experiment> getExperimentsByFacility(String facilityName) throws Exception {
         List<Experiment> experiments = new ArrayList();
-        List<Integer> numbers = dataFolderRepository.getFacilityExperimentNumbers(facilityName);
-        for (Integer number : numbers) {
+        List<String> experimentNames 
+                = dataFolderRepository.getFacilityExperimentNames(facilityName);
+        for (String expeirmentName : experimentNames) {
             try {
-                Experiment experiment = getExperiment(number);
+                Experiment experiment = getExperiment(expeirmentName);
                 experiments.add(experiment);
             } catch (Exception e) {
-                System.err.println("failed to get experiment " + number);
+                System.err.println("failed to get experiment " + expeirmentName);
             }
         }
         return experiments;
