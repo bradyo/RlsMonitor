@@ -7,31 +7,60 @@ import java.util.*;
 /**
  * Fetches Experiment objects from data sources.
  */
-public class ExperimentRepository 
-{
+public class ExperimentRepository {
+    
+    /**
+     * Cached Experiment map, saves loaded experiments.
+     */
     private HashMap<String,Experiment> experimentMap; // name => expeirment
+    
+    /**
+     * Key repository for fetching experiment key data.
+     */
     private KeyRepository keyRepository;
+    
+    /**
+     * Data folder repository for fetching data folders for experiments.
+     */
     private DataFolderRepository dataFolderRepository;
-
+    
+    /**
+     * CSV repository for fetching experiment data in legacy CSV format.
+     */
+    private CsvExperimentRepository csvExperimentRepository;
+    
+    
     public ExperimentRepository(KeyRepository keyRepository, 
-            DataFolderRepository dataFolderRepository) {
+             DataFolderRepository dataFolderRepository,
+             CsvExperimentRepository csvExperimentRepository) {
         this.keyRepository = keyRepository;
         this.dataFolderRepository = dataFolderRepository;
+        this.csvExperimentRepository = csvExperimentRepository;
         this.experimentMap = new HashMap();
     }
 
-    public Experiment getExperiment(String name) throws Exception {
-        // get experiment from cache if possible, otherwise build up from data
+    public Experiment getExperiment(String experimentName) throws Exception {
         Experiment experiment;
-        if (experimentMap.containsKey(name)) {
-            experiment = experimentMap.get(name);
-        } else {
-            experiment = buildExperiment(name);
-            experimentMap.put(name, experiment);
+        if (experimentMap.containsKey(experimentName)) {
+            // get from cache if possible
+            experiment = experimentMap.get(experimentName);
+        } 
+        else if (dataFolderRepository.hasExperiment(experimentName)) {
+            // get from data folder
+            experiment = buildExperiment(experimentName);
+            experimentMap.put(experimentName, experiment); // cache
+        }
+        else if (csvExperimentRepository.hasExperiment(experimentName)) {
+            // try getting from csv repository
+            experiment = csvExperimentRepository.getExperiment(experimentName);
+            experimentMap.put(experimentName, experiment); // cache
+        }
+        else {
+            throw new Exception("Experiment '" + experimentName + "' does not exist");
         }
         return experiment;
     }
-    
+
     private Experiment buildExperiment(String name) throws Exception {
         Experiment experiment = new Experiment();
         experiment.setName(name);        
