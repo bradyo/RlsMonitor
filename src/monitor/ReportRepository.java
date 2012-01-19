@@ -1,8 +1,11 @@
 package monitor;
 
-import java.io.*;
+import java.io.File;
 import java.util.List;
-import monitor.reporting.*;
+import monitor.reporting.DatabaseReport;
+import monitor.reporting.ExtendedDatabaseReport;
+import monitor.reporting.StatusReport;
+import monitor.reporting.TemplateReport;
 
 public class ReportRepository 
 {
@@ -31,32 +34,11 @@ public class ReportRepository
             return;
         }
         
-        // delete all experiment reports
-        deleteAllReports(experiment);
-        
-        // generate static reports
-        File folder = getExperimentReportFolder(experiment);
-        try {
-            DatabaseReport databaseReport = new DatabaseReport(experiment);
-            String filename = getDatabaseReportFilename(experiment);
-            File file = new File(folder + File.separator + filename);
-            databaseReport.write(file);
-        }
-        catch (Exception e) {
-            System.err.println("Failed to generate database report: " + e.getMessage());
-        }
-            
-        // generate templated reports
+        // update the different types of reports
+        updateDatabaseReport(experiment);
+        updateExtendedDatabaseReport(experiment);
         for (File templateFile : templateFolder.listFiles()) {
-            try {
-                String filename = getTemplateReportFilename(experiment, templateFile);
-                File file = new File(folder + File.separator + filename);
-                TemplateReport templateReport = new TemplateReport(experiment, templateFile);
-                templateReport.write(file);
-            }
-            catch (Exception e) {
-                System.err.println("Failed to generate templated report: " + e.getMessage());
-            }
+            updateTemplateReport(templateFile, experiment);
         }
         
         // notify core system about completed experiment
@@ -70,52 +52,121 @@ public class ReportRepository
         }
     }
     
-    private void deleteAllReports(Experiment experiment) {
+    private void updateDatabaseReport(Experiment experiment) {
+        // set up target directory
+        File targetFolder = new File(outputFolder + File.separator + "database");
+        if (! targetFolder.exists()) {
+            targetFolder.mkdir();
+        }
+        
+        // delete existing reports
+        Integer experimentNumber = experiment.getNumber();
+        File incompleteFile = new File(targetFolder  + File.separator 
+                + experimentNumber + "-incomplete.csv");
+        if (incompleteFile.exists()) {
+            incompleteFile.delete();
+        }
+        File completeFile = new File(targetFolder + File.separator 
+                + experimentNumber + ".csv");
+        if (completeFile.exists()) {
+            completeFile.delete();
+        }
+        
+        // try to generate the new report
+        try {
+            File targetFile = incompleteFile;
+            if (experiment.isComplete()) {
+                targetFile = completeFile;
+            }
+            DatabaseReport report = new DatabaseReport(experiment);
+            report.write(targetFile);
+        }
+        catch (Exception e) {
+            System.err.println("Failed to generate database report: " + e.getMessage());
+        }
+    }
+    
+    private void updateExtendedDatabaseReport(Experiment experiment) {
+        // set up target directory
+        File targetFolder = new File(outputFolder + File.separator + "database-extended");
+        if (! targetFolder.exists()) {
+            targetFolder.mkdir();
+        }
+        
+        // delete existing reports
+        Integer experimentNumber = experiment.getNumber();
+        File incompleteFile = new File(targetFolder  + File.separator 
+                + experimentNumber + "-incomplete.csv");
+        if (incompleteFile.exists()) {
+            incompleteFile.delete();
+        }
+        File completeFile = new File(targetFolder + File.separator 
+                + experimentNumber + ".csv");
+        if (completeFile.exists()) {
+            completeFile.delete();
+        }
+        
+        // try to generate the new report
+        try {
+            File targetFile = incompleteFile;
+            if (experiment.isComplete()) {
+                targetFile = completeFile;
+            }
+            ExtendedDatabaseReport report = new ExtendedDatabaseReport(experiment);
+            report.write(targetFile);
+        }
+        catch (Exception e) {
+            System.err.println("Failed to generate extended database report: " + e.getMessage());
+        }
+    }
+    
+    
+    private void updateTemplateReport(File templateFile, Experiment experiment) {
+        // set up target directory
+        if (! templateFile.getName().matches("^.+\\.xlsx$")) {
+            System.err.println("Cannot generate template report for " 
+                    + templateFile.getName() + ", doesnt match xlsx extension");
+            return;
+        }
+        
+        String filename = templateFile.getName();
+        String reportName = filename.substring(0, filename.length() - 5);
+        File targetFolder = new File(outputFolder + File.separator + reportName);
+        if (! targetFolder.exists()) {
+            targetFolder.mkdir();
+        }
+        
+        // delete existing reports
         Integer experimentNumber = experiment.getNumber();
         
-        // delete incomplete reports
-        File folder = new File(outputFolder 
-                + File.separator + experimentNumber);
-        if (folder.isDirectory()) {
-            for (File file : folder.listFiles()) {
-                file.delete();
+        File incompleteFile = new File(targetFolder, experimentNumber + "-incomplete.xlsx");
+        if (incompleteFile.exists()) {
+            incompleteFile.delete();
+        }
+        
+        File completeFile = new File(targetFolder + File.separator  + experimentNumber + ".xlsx");
+        if (completeFile.exists()) {
+            completeFile.delete();
+        }
+        
+        try {
+            File targetFile = incompleteFile;
+            if (experiment.isComplete()) {
+                targetFile = completeFile;
             }
+            TemplateReport report = new TemplateReport(experiment, templateFile);
+            report.write(targetFile);
         }
-    }
-    
-    private File getExperimentReportFolder(Experiment experiment) {
-        Integer experimentNumber = experiment.getNumber();
-        File file = new File(outputFolder 
-                + File.separator + experimentNumber);
-        if (! file.isDirectory()) {
-            file.mkdir();
+        catch (Exception e) {
+            System.err.println("Failed to generate templated report: " + e.getMessage());
         }
-        return file;
-    }
-    
-    private String getDatabaseReportFilename(Experiment experiment) {
-        String filename;
-        if (experiment.isComplete()) {
-            filename = experiment.getNumber() + ".csv";
-        } else {
-            filename = experiment.getNumber() + "_incomplete.csv";
-        }
-        return filename;
-    }
-    
-    private String getTemplateReportFilename(Experiment experiment, File templateFile) {
-        String filename;
-        if (experiment.isComplete()) {
-            filename = experiment.getNumber() + "_" + templateFile.getName();
-        } else {
-            filename = experiment.getNumber() + "_incomplete_" + templateFile.getName();
-        }
-        return filename;
     }
     
     public void updateStatusReport(DataSource dataSource) throws Exception {
         System.out.println("Updating status report for data source: " 
                 + dataSource.getFacilityName());
+        
+        // TODO: only update experiments that change, not all.
         
         // get incomplete experiments from repository
         // here we dont need any key data so we should avoid an unnecessary

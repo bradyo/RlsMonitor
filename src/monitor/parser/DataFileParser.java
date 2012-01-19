@@ -52,7 +52,6 @@ public class DataFileParser
         // extract the PRINT worksheet (contains cell division counts)
         Sheet sheet = wb.getSheetAt(0);
         if (sheet == null) {
-            wb = null;
             throw new Exception("failed to get worksheet 0");
         }
         
@@ -69,7 +68,6 @@ public class DataFileParser
         }
 
         // read rows and fill in cell sets
-        
         Integer rowIndex = DATA_START_ROW_INDEX;
         Integer minSetIndex = setIds.get(0);
         Integer maxSetIndex = setIds.get(setIds.size() - 1);
@@ -99,15 +97,7 @@ public class DataFileParser
                 cells.add(motherCell);
             }
             rowIndex++;
-            
-            // prevent memory leaks?
-            row = null;
         }
-        
-        // prevent memory leaks?
-        headerRow = null;
-        sheet = null;
-        wb = null;
     }
     
     private String getComment(Row row) {
@@ -181,8 +171,6 @@ public class DataFileParser
         while (! doneScanning) {
             String value = values[columnIndex];
             if (value == null) {
-                System.err.println("null value in data file, row " + row.getRowNum()
-                        + ": treated as zero");
                 value = "0";
             } else {
                 value.trim();
@@ -284,10 +272,6 @@ public class DataFileParser
             }
         }
         cell.setDivisionCounts(divisionCounts);
-        
-        if (! cell.isComplete()) {
-            System.out.println("cell " + cell.getId() + " incomplete");
-        }
         
         return cell;
     }
