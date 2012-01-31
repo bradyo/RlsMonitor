@@ -19,11 +19,22 @@ public class ExtendedDatabaseReport
     public void write(File outputFile) throws IOException {
         outputFile.createNewFile();
         
+        // write header
+        Integer cellCount = experiment.getMaxCellSetId();
         Writer writer = new BufferedWriter(new FileWriter(outputFile));
         writer.write("id,reference,label,strain,media,temperature,cell_count,"
                 + "end_lost,omit_count,end_single,end_small_bud,end_large_bud,end_cluster,"
-                + "lifespans\n");
+                + "lifespans");
+        for (Integer i = 2; i < cellCount; i++) {
+            writer.write("," + i.toString());
+        }
+        writer.write(",endCode");
+        for (Integer i = 2; i < cellCount; i++) {
+            writer.write("," + i.toString());
+        }
+        writer.write("\n");
 
+        // write cell data rows
         for (Integer i = 1; i <= experiment.getMaxCellSetId(); i++) {
             writer.write(i + ",");
 
@@ -97,17 +108,21 @@ public class ExtendedDatabaseReport
                 Integer lifespan = cell.getLifespan();
                 if (lifespan != null) {
                     String value = lifespan.toString();
-                    MotherCell.EndState endState = cell.getEndState();
-                    if (endState == MotherCell.EndState.NO_BUD) {
-                        value += "|single";
-                    } else if (endState == MotherCell.EndState.SMALL_BUD) {
-                        value += "|small bud";
-                    } else if (endState == MotherCell.EndState.LARGE_BUD) {
-                        value += "|large bud";
-                    } else if (endState == MotherCell.EndState.CLUSTER) {
-                        value += "|cluster";
-                    }
                     writer.write(value);
+                }
+                writer.write(",");
+            }
+            
+            for (MotherCell cell : cellSet.getCells()) {
+                MotherCell.EndState endState = cell.getEndState();
+                if (endState == MotherCell.EndState.NO_BUD) {
+                    writer.write("U");
+                } else if (endState == MotherCell.EndState.SMALL_BUD) {
+                    writer.write("S");
+                } else if (endState == MotherCell.EndState.LARGE_BUD) {
+                    writer.write("L");
+                } else if (endState == MotherCell.EndState.CLUSTER) {
+                    writer.write("C");
                 }
                 writer.write(",");
             }

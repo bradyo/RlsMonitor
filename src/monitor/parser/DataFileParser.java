@@ -52,6 +52,7 @@ public class DataFileParser
         // extract the PRINT worksheet (contains cell division counts)
         Sheet sheet = wb.getSheetAt(0);
         if (sheet == null) {
+            wb = null;
             throw new Exception("failed to get worksheet 0");
         }
         
@@ -97,7 +98,17 @@ public class DataFileParser
                 cells.add(motherCell);
             }
             rowIndex++;
+            
+            // prevent memory leaks in POI library
+            row = null;
         }
+        
+        // prevent memory leaks in POI library
+        headerRow = null;
+        sheet = null;
+        wb = null;
+        
+        
     }
     
     private String getComment(Row row) {
