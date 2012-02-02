@@ -19,17 +19,26 @@ public class ExtendedDatabaseReport
     public void write(File outputFile) throws IOException {
         outputFile.createNewFile();
         
+        // get the max numbr of cells in a set, for spacing lifespans and end codes
+        Integer maxCellsCount = 1;
+        for (Integer i = 1; i <= experiment.getMaxCellSetId(); i++) {
+            MotherCellSet cellSet = experiment.getCellSet(i);
+            Integer cellsCount = cellSet.getCells().size();
+            if (cellsCount > maxCellsCount) {
+                maxCellsCount = cellsCount;
+            }
+        }
+        
         // write header
-        Integer cellCount = experiment.getMaxCellSetId();
         Writer writer = new BufferedWriter(new FileWriter(outputFile));
         writer.write("id,reference,label,strain,media,temperature,cell_count,"
                 + "end_lost,omit_count,end_single,end_small_bud,end_large_bud,end_cluster,"
                 + "lifespans");
-        for (Integer i = 2; i < cellCount; i++) {
+        for (Integer i = 2; i <= maxCellsCount; i++) {
             writer.write("," + i.toString());
         }
         writer.write(",endCode");
-        for (Integer i = 2; i < cellCount; i++) {
+        for (Integer i = 2; i <= maxCellsCount; i++) {
             writer.write("," + i.toString());
         }
         writer.write("\n");
@@ -104,12 +113,17 @@ public class ExtendedDatabaseReport
             writer.write(clusterCount.toString());
             writer.write(",");
 
+            
             for (MotherCell cell : cellSet.getCells()) {
                 Integer lifespan = cell.getLifespan();
                 if (lifespan != null) {
                     String value = lifespan.toString();
                     writer.write(value);
                 }
+                writer.write(",");
+            }
+            Integer cellsCount = cellSet.getCells().size();
+            for (Integer iColumn = cellsCount + 1; iColumn <= maxCellsCount; iColumn++) {
                 writer.write(",");
             }
             
@@ -124,6 +138,9 @@ public class ExtendedDatabaseReport
                 } else if (endState == MotherCell.EndState.CLUSTER) {
                     writer.write("C");
                 }
+                writer.write(",");
+            }
+            for (Integer iColumn = cellsCount + 1; iColumn <= maxCellsCount; iColumn++) {
                 writer.write(",");
             }
             

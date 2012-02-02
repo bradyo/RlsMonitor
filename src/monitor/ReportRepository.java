@@ -2,10 +2,7 @@ package monitor;
 
 import java.io.File;
 import java.util.List;
-import monitor.reporting.DatabaseReport;
-import monitor.reporting.ExtendedDatabaseReport;
-import monitor.reporting.StatusReport;
-import monitor.reporting.TemplateReport;
+import monitor.reporting.*;
 
 public class ReportRepository 
 {
@@ -36,6 +33,7 @@ public class ReportRepository
         
         // update the different types of reports
         updateDatabaseReport(experiment);
+        updateCellReport(experiment);
         updateExtendedDatabaseReport(experiment);
         for (File templateFile : templateFolder.listFiles()) {
             updateTemplateReport(templateFile, experiment);
@@ -83,6 +81,40 @@ public class ReportRepository
         }
         catch (Exception e) {
             System.err.println("Failed to generate database report: " + e.getMessage());
+        }
+    }
+    
+    private void updateCellReport(Experiment experiment) {
+        // set up target directory
+        File targetFolder = new File(outputFolder + File.separator + "cell");
+        if (! targetFolder.exists()) {
+            targetFolder.mkdir();
+        }
+        
+        // delete existing reports
+        Integer experimentNumber = experiment.getNumber();
+        File incompleteFile = new File(targetFolder  + File.separator 
+                + experimentNumber + "-incomplete.csv");
+        if (incompleteFile.exists()) {
+            incompleteFile.delete();
+        }
+        File completeFile = new File(targetFolder + File.separator 
+                + experimentNumber + ".csv");
+        if (completeFile.exists()) {
+            completeFile.delete();
+        }
+        
+        // try to generate the new report
+        try {
+            File targetFile = incompleteFile;
+            if (experiment.isComplete()) {
+                targetFile = completeFile;
+            }
+            CellReport report = new CellReport(experiment);
+            report.write(targetFile);
+        }
+        catch (Exception e) {
+            System.err.println("Failed to generate cell report: " + e.getMessage());
         }
     }
     
