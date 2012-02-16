@@ -21,7 +21,7 @@ public class CellReport
 
         // write header
         Writer writer = new BufferedWriter(new FileWriter(outputFile));
-        writer.write("label,strain,short_genotype,media,temperature,lifespan,end_state,divisions\n");
+        writer.write("label,strain,short_genotype,media,temperature,lifespan,complete,end_state,divisions\n");
 
         // write cell data rows
         for (Integer i = 1; i <= experiment.getMaxCellSetId(); i++) {
@@ -67,6 +67,12 @@ public class CellReport
                     writer.write(value);
                 }
                 writer.write(",");
+                
+                if (cell.isComplete()) {
+                    writer.write("X,");
+                } else {
+                    writer.write(",");
+                }
                 
                 MotherCell.EndState endState = cell.getEndState();
                 if (endState != null) {
