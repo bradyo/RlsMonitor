@@ -309,7 +309,7 @@ public class DataFileParser
                 }
                 switch(cellType) {
                     case org.apache.poi.ss.usermodel.Cell.CELL_TYPE_STRING:
-                        rowValue = cell.getStringCellValue();
+                        rowValue = cell.getStringCellValue().trim();
                         break;
                     case org.apache.poi.ss.usermodel.Cell.CELL_TYPE_NUMERIC:
                         double doubleValue = cell.getNumericCellValue();
