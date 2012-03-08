@@ -33,4 +33,11 @@ public class StatusReport
         }
         writer.close();
     }
+    
+    public void update(File file) throws Exception {
+        if (! file.exists()) {
+            return this.save(file);
+        }
+    }
+    
 }
