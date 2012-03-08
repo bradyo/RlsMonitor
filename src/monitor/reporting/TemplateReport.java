@@ -55,6 +55,9 @@ public class TemplateReport
             System.err.println("failed to write report file: " + e.getMessage());
         }
         
+        // delete temporary file
+        temporaryFile.delete();        
+        
         // prevent memory leaks?
         workbook = null;
         evaluator = null;
