@@ -19,17 +19,9 @@ public class ReportRepository
         this.templateFolder = templateFolder;
     }
     
-    public void updateReports(Integer experimentNumber) {
+    public void updateReports(Experiment experiment) {
         System.out.println();
-        System.out.println("Updating reports experiment: " + experimentNumber);
-        
-        Experiment experiment;
-        try {
-            experiment = experimentRepository.getExperiment(experimentNumber);
-        } catch (Exception e) {
-            System.err.println("failed to load experiment: " + e.getMessage());
-            return;
-        }
+        System.out.println("Updating reports experiment: " + experiment.getNumber());
         
         // update the different types of reports
         updateDatabaseReport(experiment);
@@ -42,7 +34,7 @@ public class ReportRepository
         // notify core system about completed experiment
         if (experiment.isComplete()) {
             try {
-                coreService.notifyExperimentComplete(experimentNumber);
+                coreService.notifyExperimentComplete(experiment.getNumber());
             } catch (Exception e) {
                 System.err.println("failed to notify core site of completed experiment: " + e.getMessage());
                 System.err.println(e.getStackTrace());
@@ -192,22 +184,5 @@ public class ReportRepository
         catch (Exception e) {
             System.err.println("Failed to generate templated report: " + e.getMessage());
         }
-    }
-    
-    public void updateStatusReport(DataSource dataSource) throws Exception {
-        System.out.println("Updating status report for data source: " 
-                + dataSource.getFacilityName());
-        
-        // TODO: only update experiments that change, not all.
-        
-        // get incomplete experiments from repository
-        // here we dont need any key data so we should avoid an unnecessary
-        // trip to the database
-        String facilityName = dataSource.getFacilityName();
-        List<Experiment> experiments = 
-                experimentRepository.getExperimentsByFacility(facilityName);
-        File file = new File(dataSource.getFolder() + File.separator + "incomplete.csv");
-        StatusReport statusReport = new StatusReport(experiments); 
-        statusReport.save(file); 
     }
 }

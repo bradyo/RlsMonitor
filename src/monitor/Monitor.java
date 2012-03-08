@@ -3,6 +3,7 @@ package monitor;
 import java.io.*;
 import java.sql.*;
 import java.util.*;
+import monitor.reporting.StatusReport;
 
 /**
  * Tracks data sources for changes (includes dissection data files and 
@@ -59,23 +60,29 @@ public class Monitor
         String facilityName = dataSource.getFacilityName();
         Collection<DataFolder> dataFolders = 
                 dataFolderRepository.findAllByFacilityName(facilityName);
-        
-        Boolean dataSourceChanged = false;
         for (DataFolder dataFolder : dataFolders) {
             Integer experimentNumber = dataFolder.getExperimentNumber();
             if (needsNewReports(experimentNumber)) {
-                reportRepository.updateReports(experimentNumber);
-                dataSourceChanged = true;
-            }
-        }
-        if (dataSourceChanged) {
-            try {
-                reportRepository.updateStatusReport(dataSource);
-            } catch (Exception e) {
-                System.err.println("failed to create status report for data source: " 
-                        + dataSource.getFacilityName());
-                System.err.println(e.getMessage());
-                System.err.println(e.getStackTrace());
+                // load experiment
+                Experiment experiment;
+                try {
+                    experiment = experimentRepository.getExperiment(experimentNumber);                    
+                } catch (Exception e) {
+                    System.err.println("failed to load experiment: " + e.getMessage());
+                    continue;
+                }
+                
+                // re-create experiment reports
+                reportRepository.updateReports(experiment);
+                
+                // update status report
+                File file = new File(dataSource.getFolder() + File.separator + "incomplete.csv");
+                StatusReport statusReport = new StatusReport(); 
+                try {
+                    statusReport.update(file, experiment); 
+                } catch (Exception e) {
+                    System.err.println("failed to update status file: " + e.getMessage());
+                }
             }
         }
     }
