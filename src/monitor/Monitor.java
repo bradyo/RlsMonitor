@@ -114,6 +114,7 @@ public class Monitor
             if (results.next()) {
                 hasChanged = true;
             }
+            results.close();
             stmt.close();
         } catch (SQLException ex) {
             System.err.println("failed to query database: " + ex.getMessage());

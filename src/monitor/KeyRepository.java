@@ -43,7 +43,8 @@ public class KeyRepository {
             key.setStrain(strain);
 
             map.put(key.getNumber(), key);
-        }       
+        }      
+        results.close();
         stmt.close();
         return map;
     }
